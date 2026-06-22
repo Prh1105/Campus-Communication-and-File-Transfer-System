@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  username     String    @unique
+  email        String    @unique
+  displayName  String
+  password     String
+  avatar       String?
+  status       String    @default("offline")   // online | offline | away
+  lastSeenAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // 关系
+  sentMessages     Message[]       @relation("SentMessages")
+  receivedMessages Message[]       @relation("ReceivedMessages")
+  uploadedFiles    FileInfo[]
+  rooms            RoomMember[]
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  content    String
+  type       String   @default("text")    // text | image | file | system
+  fileUrl    String?
+  fileName   String?
+  fileSize   Int?
+
+  // 发送方
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  senderId   Int
+
+  // 接收方 (私聊)
+  receiver   User?    @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiverId Int?
+
+  // 群聊 (可选)
+  room       Room?    @relation(fields: [roomId], references: [id])
+  roomId     Int?
+
+  createdAt  DateTime @default(now())
+}
+
+model Room {
+  id        Int      @id @default(autoincrement())
+  name      String
+  avatar    String?
+  isGroup   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members   RoomMember[]
+  messages  Message[]
+}
+
+model RoomMember {
+  id       Int      @id @default(autoincrement())
+  user     User     @relation(fields: [userId], references: [id])
+  userId   Int
+  room     Room     @relation(fields: [roomId], references: [id])
+  roomId   Int
+  joinedAt DateTime @default(now())
+
+  @@unique([userId, roomId])
+}
+
+model FileInfo {
+  id           Int      @id @default(autoincrement())
+  originalName String
+  fileName     String
+  mimeType     String
+  size         Int
+  url          String
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
+  uploadedById Int
+  createdAt    DateTime @default(now())
+}
