@@ -4,6 +4,9 @@
   "private": true,
   "description": "校园通信与文件传输系统 — Monorepo with pnpm + Turborepo + NestJS + React",
   "scripts": {
+    "web": "pnpm --filter @campus-im/frontend dev",
+    "backend": "pnpm --filter @campus-im/backend start:dev",
+    "all": "concurrently \"pnpm run web\" \"pnpm run backend\"",
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
@@ -26,5 +29,8 @@
       "version": "^11.7.0",
       "onFail": "download"
     }
+  },
+  "dependencies": {
+    "concurrently": "^10.0.3"
   }
 }
