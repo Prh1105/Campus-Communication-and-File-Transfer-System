@@ -23,13 +23,7 @@
   "devDependencies": {
     "turbo": "latest"
   },
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.7.0",
-      "onFail": "download"
-    }
-  },
+  "packageManager": "pnpm@11.7.0",
   "dependencies": {
     "concurrently": "^10.0.3"
   }
