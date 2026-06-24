@@ -1,8 +1,135 @@
-# Campus-Communication-and-File-Transfer-System
+# 校园通信与文件传输系统
 
-校园通信与文件传输系统 — 基于 Monorepo 架构的即时通讯与文件共享平台。
+基于 Monorepo 架构的即时通讯与文件共享平台（NestJS + React + WebSocket + PostgreSQL）。
+
+## 🚀 快速启动
+
+### 前置条件
+- **Node.js** v18+
+- **pnpm** v11+（`npm install -g pnpm`）
+- **PostgreSQL**（Docker 或本地安装）
+
+### 1. 安装依赖
+
+```bash
+pnpm install
+```
+
+### 2. 配置环境变量
+
+根目录 `.env` 已包含默认配置，确保 `DATABASE_URL` 指向你的 PostgreSQL 实例。
+
+### 3. 启动数据库
+
+```bash
+# 使用 Docker
+docker run --name campus-im-db -e POSTGRES_PASSWORD=602115 -p 5432:5432 -d postgres
+
+# 创建数据库
+docker exec -it campus-im-db psql -U postgres -c "CREATE DATABASE campus_im;"
+```
+
+### 4. 数据库迁移 + 种子数据
+
+```bash
+cd apps/backend
+npx prisma migrate dev --name init
+cd ../..
+```
+
+首次启动后端时，系统会自动创建种子数据。
+
+### 5. 启动开发环境
+
+```bash
+pnpm dev
+```
+
+| 服务 | 地址 |
+|------|------|
+| 前端 | http://localhost:5173 |
+| 后端 API | http://localhost:3000/api |
+
+### 6. 测试账号（种子数据）
+
+| 用户名 | 密码 | 说明 |
+|--------|------|------|
+| user1 | pass1 | 测试用户1 |
+| user2 | pass1 | 测试用户2 |
+| user3 | pass1 | 测试用户3 |
+| user4 | pass1 | 测试用户4 |
+| user5 | pass1 | 测试用户5 |
+
+所有用户自动加入 **校园广场** 公共聊天室。
 
 ---
+
+## 🧪 测试聊天功能
+
+### 点对点私聊
+1. 在浏览器中打开 http://localhost:5173 → 以 `user1` 登录
+2. 打开另一个浏览器或无痕窗口 → 以 `user2` 登录
+3. 在 user1 的侧边栏切换到"在线用户" → 点击 `user2`
+4. 输入消息并发送 → user2 实时收到
+
+### 群聊
+1. 两个用户登录后，在侧边栏"聊天室"中选择 **校园广场**
+2. 发送消息 → 所有房间成员实时收到
+3. 退出后重新登录 → 历史消息依然存在
+
+### 文件传输
+1. 在聊天输入框左侧点击 📎 按钮
+2. 选择一个文件 → 显示上传进度
+3. 上传完成后自动发送文件消息
+4. 对方可点击文件链接下载
+
+### 在线状态
+- 用户上线时 → 在线用户列表实时更新，头像显示绿色圆点
+- 用户关闭标签页 → 其他用户立刻看到状态变为离线
+- 服务器异常断开 → 客户端自动重连
+
+---
+
+## 🔌 API 接口
+
+### 认证 (`/api/auth`)
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | /api/auth/register | 用户注册 |
+| POST | /api/auth/login | 用户登录 |
+| GET | /api/auth/me | 获取当前用户 |
+
+### 用户 (`/api/users`)
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /api/users | 所有用户列表 |
+| GET | /api/users/online | 在线用户列表 |
+| GET | /api/users/:id | 用户详情 |
+
+### 房间 (`/api/rooms`)
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /api/rooms | 房间列表 |
+| GET | /api/rooms/:id | 房间详情 |
+| POST | /api/rooms | 创建房间 |
+| GET | /api/rooms/:id/messages | 房间消息（分页） |
+
+### 聊天 (`/api/chat`)
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /api/chat/private/:userId | 私聊历史（分页） |
+| GET | /api/chat/room/:roomId | 房间历史（分页） |
+
+### 文件 (`/api/files`)
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | /api/files/upload | 上传文件 |
+| GET | /api/files | 文件列表 |
+| GET | /api/files/:id | 文件详情 |
+
+---
+
+## 🏗 项目结构
 
 ## 一、技术栈
 
