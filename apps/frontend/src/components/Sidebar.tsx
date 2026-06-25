@@ -10,7 +10,7 @@ export default function Sidebar() {
   const [tab, setTab] = useState<'rooms' | 'online'>('rooms');
 
   return (
-    <div className="w-80 h-full flex flex-col bg-gray-50 border-r border-gray-200 shrink-0">
+    <div style={{ width: 320, height: "100%", display: "flex", flexDirection: "column", backgroundColor: "#f9fafb", borderRight: "1px solid #e5e7eb", flexShrink: 0 }}>
       {/* 当前用户信息 */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
@@ -53,7 +53,7 @@ export default function Sidebar() {
               : 'text-gray-500 hover:text-gray-700'
           }`}
         >
-          在线用户 ({onlineUsers.filter((u) => u.status === 'online').length})
+          在线用户 ({(onlineUsers || []).filter((u) => u.status === 'online').length})
         </button>
       </div>
 

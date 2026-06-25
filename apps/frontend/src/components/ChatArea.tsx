@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
-import { useChat } from '../contexts/ChatContext';
-import ChatHeader from './ChatHeader';
-import MessageList from './MessageList';
-import MessageInput from './MessageInput';
-import TypingIndicator from './TypingIndicator';
+import { useEffect } from "react";
+import { useChat } from "../contexts/ChatContext";
+import ChatHeader from "./ChatHeader";
+import MessageList from "./MessageList";
+import MessageInput from "./MessageInput";
+import TypingIndicator from "./TypingIndicator";
 
 export default function ChatArea() {
   const { activeChat, loadHistory } = useChat();
@@ -16,18 +16,45 @@ export default function ChatArea() {
 
   if (!activeChat) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="text-6xl mb-4">💬</div>
-          <h2 className="text-xl font-semibold text-gray-700 mb-2">校园通信系统</h2>
-          <p className="text-gray-500">选择一个聊天室或在线用户开始聊天</p>
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#f9fafb",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>💬</div>
+          <h2
+            style={{
+              fontSize: "1.25rem",
+              fontWeight: 600,
+              color: "#374151",
+              marginBottom: "0.5rem",
+            }}
+          >
+            校园通信系统
+          </h2>
+          <p style={{ color: "#6b7280" }}>
+            选择一个聊天室或在线用户开始聊天
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div
+      style={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#f9fafb",
+        border: "1px solid green", // 🔴 调试
+      }}
+    >
       <ChatHeader />
       <MessageList />
       <TypingIndicator />

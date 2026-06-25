@@ -3,7 +3,7 @@ import { useChat } from '../contexts/ChatContext';
 export default function TypingIndicator() {
   const { typingUsers, onlineUsers, activeChat } = useChat();
 
-  if (!activeChat || typingUsers.length === 0) return null;
+  if (!activeChat || (typingUsers || []).length === 0) return null;
 
   const names = typingUsers
     .map((id) => onlineUsers.find((u) => u.id === id)?.displayName)

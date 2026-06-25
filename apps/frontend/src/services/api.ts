@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const TOKEN_KEY = 'campus_im_token';
+
 const api = axios.create({
   baseURL: '/api',
   headers: { 'Content-Type': 'application/json' },
@@ -7,7 +9,7 @@ const api = axios.create({
 
 // 请求拦截器: 附加 JWT token
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem(TOKEN_KEY);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -30,10 +32,9 @@ api.interceptors.response.use(
       error.message ||
       '请求失败';
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
+      localStorage.removeItem(TOKEN_KEY);
+      // 使用 dispatchEvent 通知 AuthContext，避免硬跳转
+      window.dispatchEvent(new Event('auth:logout'));
     }
     return Promise.reject(new Error(msg));
   },

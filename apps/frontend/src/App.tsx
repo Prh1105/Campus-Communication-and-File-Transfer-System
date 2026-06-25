@@ -3,6 +3,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { SocketProvider } from './contexts/SocketContext';
 import { ChatProvider } from './contexts/ChatContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ChatLayout from './pages/ChatLayout';
@@ -20,7 +21,9 @@ export default function App() {
               <ProtectedRoute>
                 <SocketProvider>
                   <ChatProvider>
-                    <ChatLayout />
+                    <ErrorBoundary>
+                      <ChatLayout />
+                    </ErrorBoundary>
                   </ChatProvider>
                 </SocketProvider>
               </ProtectedRoute>

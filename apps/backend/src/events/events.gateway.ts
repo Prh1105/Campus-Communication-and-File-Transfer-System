@@ -23,7 +23,7 @@ import { createWsAuthMiddleware } from './ws-auth.middleware';
 export class EventsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  @WebSocketServer() server: Server;
+  @WebSocketServer() server!: Server;
   private readonly logger = new Logger(EventsGateway.name);
 
   // 在线用户: Map<userId, Set<socketId>>
@@ -49,9 +49,14 @@ export class EventsGateway
       return;
     }
 
-    // 加入在线列表
-    if (!this.onlineUsers.has(user.id)) {
+    const isFirstSocket = !this.onlineUsers.has(user.id);
+    if (isFirstSocket) {
       this.onlineUsers.set(user.id, new Set());
+    }
+    // 先注册 socket，再执行异步操作，防止竞态条件
+    this.onlineUsers.get(user.id)!.add(client.id);
+
+    if (isFirstSocket) {
       // 首次上线: 更新数据库状态
       await this.prisma.user.update({
         where: { id: user.id },
@@ -63,7 +68,6 @@ export class EventsGateway
         username: user.username,
       });
     }
-    this.onlineUsers.get(user.id)!.add(client.id);
 
     this.logger.log(`用户 ${user.username} (${user.id}) 已连接. 在线: ${this.onlineUsers.size}`);
   }

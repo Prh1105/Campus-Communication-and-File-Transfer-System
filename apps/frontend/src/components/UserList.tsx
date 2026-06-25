@@ -6,7 +6,7 @@ export default function UserList({ onSelect }: { onSelect: (userId: number) => v
   const { onlineUsers } = useChat();
   const { user: me } = useAuth();
 
-  const others = onlineUsers.filter((u) => u.id !== me?.id);
+  const others = (onlineUsers || []).filter((u) => u.id !== me?.id);
   const online = others.filter((u) => u.status === 'online');
   const offline = others.filter((u) => u.status !== 'online');
 

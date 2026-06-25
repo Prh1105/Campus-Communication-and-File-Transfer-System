@@ -32,6 +32,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  // 监听 401 触发的登出事件
+  useEffect(() => {
+    const handleForceLogout = () => logout();
+    window.addEventListener('auth:logout', handleForceLogout);
+    return () => window.removeEventListener('auth:logout', handleForceLogout);
+  }, [logout]);
+
+  // 初始化时验证 token
   useEffect(() => {
     if (token) {
       authService

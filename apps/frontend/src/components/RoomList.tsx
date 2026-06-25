@@ -6,7 +6,7 @@ export default function RoomList() {
 
   return (
     <div className="py-2">
-      {rooms.map((room) => (
+      {(rooms || []).map((room) => (
         <RoomCard
           key={room.id}
           room={room}
@@ -14,7 +14,7 @@ export default function RoomList() {
           onClick={() => selectChat({ type: 'room', roomId: room.id })}
         />
       ))}
-      {rooms.length === 0 && (
+      {(rooms || []).length === 0 && (
         <p className="text-center text-gray-400 text-sm py-8">暂无聊天室</p>
       )}
     </div>
